@@ -1,0 +1,70 @@
+---
+# tasks file for nvim
+- name: Dependencies
+  ansible.builtin.package:
+    name:
+      - base-devel
+      - cmake
+      - curl
+      - ninja
+      - tree-sitter
+      - unzip
+    state: latest
+  become: yes
+
+- name: Clone
+  ansible.builtin.git:
+    clone: yes
+    repo: https://github.com/neovim/neovim.git
+    dest: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
+    depth: 1
+    force: yes
+    single_branch: yes
+    update: yes
+    version: "{{ neovim_version | default('master') }}"
+  register: clone
+
+- name: Build
+  make:
+    chdir: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
+    params:
+      CMAKE_BUILD_TYPE: RelWithDebInfo
+  when: clone.changed
+
+- name: Install
+  make:
+    chdir: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
+    target: install
+  become: yes
+  when: clone.changed
+
+- name: Remove build folder
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/code/github.com/neovim/neovim/build"
+    state: absent
+  become: yes
+
+- name: Config folder
+  ansible.builtin.file:
+    mode: "0755"
+    path: "{{ ansible_user_dir }}/.config/nvim"
+    state: directory
+
+- name: Clone Astronvim
+  ansible.builtin.git:
+    clone: yes
+    repo: https://github.com/AstroNvim/AstroNvim
+    dest: "{{ ansible_user_dir }}/.config/nvim"
+    depth: 1
+    force: yes
+    single_branch: yes
+    update: yes
+
+- name: Copy user init.lua
+  ansible.builtin.copy:
+    src: "{{config_dir}}/nvim/lua/user"
+    dest: "{{ ansible_user_dir }}/.config/nvim/lua/user"
+
+- name: Update Packer
+  ansible.builtin.shell:
+    cmd: "nvim  --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'"

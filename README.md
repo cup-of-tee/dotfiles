@@ -1,2 +1,9 @@
 # dotfiles
-my beloved config
+- nvim
+- - TODO: git plugin
+
+
+## Install
+
+`cd ansible`
+`ansible-playbook main.yml -K`
