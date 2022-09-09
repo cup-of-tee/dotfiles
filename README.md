@@ -1,9 +1,6 @@
-# dotfiles
+# Dotfiles
+Inspired by https://github.com/ALT-F4-LLC/dotfiles
+
+# Packets
 - nvim
 - - TODO: git plugin
-
-
-## Install
-
-`cd ansible`
-`ansible-playbook main.yml -K`

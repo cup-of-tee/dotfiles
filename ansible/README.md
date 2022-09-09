@@ -1,41 +1,51 @@
-## Poetry - python environment
+# Poetry
 
-1. Install poetry
+Lets run ansible from virtual environment. 
+
+Poetry may seem a bit heavy for simple task like this, but anyway.
+
+### Install poetry
 
 https://python-poetry.org/docs/#installing-with-the-official-installer
+
 `curl -sSL https://install.python-poetry.org | python3 -`
+
 `export PATH="$PATH:$HOME/.local/bin"`
+
 `poetry completions bash > ${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions/poetry`
 
-2. Fix completion for poetry
+### Fix completion for poetry
 
 https://github.com/python-poetry/cleo/issues/133
+
 Fix two-words commands with double quotes: `("command subcommand")`
 
-3. Install deps
+### Install deps
 
 `poetry install`
 
-4. Enter shell
+### Enter shell
 
 `poetry shell`
 
 Now we have ansible inside poetry shell.
 
 
-## Ansible
+# Ansible
 
-1. Lets get completions for ansible too.
+### Lets get completions for ansible too.
 
 Ansible uses python's argcomplete. 
+
 Argcomplete generates bash completion for all python scripts that use argparse.
+
 Enable global argcomplete's completion for current user
 
 `activate-global-python-argcomplete --dest=${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions`
 
 The trick here is to fed it with correct bash-completion directory.
 
-2. Run playbook
+### Run playbook
 
 `ansible-playbook main.yml -K`
 
