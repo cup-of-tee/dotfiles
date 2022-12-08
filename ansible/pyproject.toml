@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 argcomplete = "^2.0.0"
 ansible = "^6.3.0"
+grip = "^4.6.1"
 
 
 [build-system]

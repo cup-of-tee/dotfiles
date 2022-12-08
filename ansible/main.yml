@@ -1,4 +1,11 @@
----
+  ---
 - hosts: localhost
   roles:
-    - role: 'nvim'
+    - nvim
+    - misc
+
+- hosts: localhost
+  roles:
+    - js
+  tags:
+    - js

@@ -47,12 +47,13 @@
   ansible.builtin.git:
     clone: yes
     repo: https://github.com/neovim/neovim.git
+    version: v0.8.0
     dest: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
     depth: 1
     force: yes
     single_branch: yes
     update: yes
-    version: "{{ neovim_version | default('master') }}"
+      #version: "{{ neovim_version | default('master') }}"
 
 - name: Build , Install and Clean
   block:
@@ -84,6 +85,7 @@
   ansible.builtin.git:
     clone: yes
     repo: https://github.com/AstroNvim/AstroNvim
+    version: v2.4.2
     dest: "{{ ansible_user_dir }}/.config/nvim"
     depth: 1
     force: yes
@@ -93,7 +95,7 @@
 - name: Copy user init.lua
   ansible.builtin.copy:
     src: "{{config_dir}}/nvim/lua/user"
-    dest: "{{ ansible_user_dir }}/.config/nvim/lua/user"
+    dest: "{{ ansible_user_dir }}/.config/nvim/lua"
 
 - name: Update Packer
   ansible.builtin.shell:
