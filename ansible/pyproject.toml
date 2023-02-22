@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 argcomplete = "^2.0.0"
+ansible-lint = { version = "^6.9.0", markers = "platform_system != 'Windows'" }
 ansible = "^6.3.0"
 grip = "^4.6.1"
 
