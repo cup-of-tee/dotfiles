@@ -1,6 +1,6 @@
 # Poetry
 
-Lets run ansible from virtual environment. 
+Lets run ansible from virtual environment.
 
 Poetry may seem a bit heavy for simple task like this, but anyway.
 
@@ -10,7 +10,8 @@ https://python-poetry.org/docs/#installing-with-the-official-installer
 
 `curl -sSL https://install.python-poetry.org | python3 -`
 
-`export PATH="$PATH:$HOME/.local/bin"`
+`echo export PATH='$PATH:$HOME/.local/bin' >> $HOME/.bashrc`
+`. $HOME/.bashrc`
 
 `poetry completions bash > ${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions/poetry`
 
@@ -30,12 +31,11 @@ Fix two-words commands with double quotes: `("command subcommand")`
 
 Now we have ansible inside poetry shell.
 
-
 # Ansible
 
 ### Lets get completions for ansible too.
 
-Ansible uses python's argcomplete. 
+Ansible uses python's argcomplete.
 
 Argcomplete generates bash completion for all python scripts that use argparse.
 

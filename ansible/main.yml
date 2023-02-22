@@ -1,10 +1,17 @@
-  ---
-- hosts: localhost
+---
+- hosts: all
   roles:
     - nvim
+  tags:
+    - nvim
+
+- hosts: all
+  roles:
+    - misc
+  tags:
     - misc
 
-- hosts: localhost
+- hosts: all
   roles:
     - js
   tags:

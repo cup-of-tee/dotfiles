@@ -1,8 +1,8 @@
 ---
 # tasks file for nvim
 - name: Platform check
-  debug: 
-    msg: 
+  debug:
+    msg:
       - OS family is {{ ansible_os_family }}
       - Package manager is {{ansible_pkg_mgr}}
 
@@ -42,6 +42,7 @@
   ansible.builtin.file:
     path: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
     state: absent
+  when: not skip_install
 
 - name: Clone
   ansible.builtin.git:
@@ -52,8 +53,10 @@
     depth: 1
     force: yes
     single_branch: yes
-    update: yes
+    update:
+      yes
       #version: "{{ neovim_version | default('master') }}"
+  when: not skip_install
 
 - name: Build , Install and Clean
   block:
@@ -74,6 +77,7 @@
         chdir: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
         target: clean
       become: yes
+  when: not skip_install
 
 - name: Config folder
   ansible.builtin.file:
@@ -85,7 +89,7 @@
   ansible.builtin.git:
     clone: yes
     repo: https://github.com/AstroNvim/AstroNvim
-    version: v2.4.2
+    version: v2.11.8
     dest: "{{ ansible_user_dir }}/.config/nvim"
     depth: 1
     force: yes
