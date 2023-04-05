@@ -1,10 +1,10 @@
 ---
 # tasks file for nvim
 - name: Platform check
-  debug:
+  ansible.builtin.debug:
     msg:
       - OS family is {{ ansible_os_family }}
-      - Package manager is {{ansible_pkg_mgr}}
+      - Package manager is {{ ansible_pkg_mgr }}
 
 - name: Dependencies for Arch
   ansible.builtin.package:
@@ -16,8 +16,8 @@
       - tree-sitter
       - unzip
     state: latest
-  become: yes
-  when: ansible_facts['os_family'] == "Archlinux"
+  become: true
+  when: ansible_facts['os_family'] == "Archlinux" and not skip_install
 
 - name: Dependencies for Debian/Ubuntu
   ansible.builtin.apt:
@@ -35,8 +35,8 @@
       - curl
       - doxygen
     state: latest
-  become: yes
-  when: ansible_facts['os_family'] == "Debian" # Debian, Ubuntu
+  become: true
+  when: ansible_facts['os_family'] == "Debian" and not skip_install
 
 - name: Remove old dir
   ansible.builtin.file:
@@ -46,19 +46,19 @@
 
 - name: Clone
   ansible.builtin.git:
-    clone: yes
+    clone: true
     repo: https://github.com/neovim/neovim.git
     version: v0.8.0
     dest: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
     depth: 1
-    force: yes
-    single_branch: yes
-    update:
-      yes
-      #version: "{{ neovim_version | default('master') }}"
+    force: true
+    single_branch: true
+    update: true
+    # version: "{{ neovim_version | default('master') }}"
   when: not skip_install
 
 - name: Build , Install and Clean
+  when: not skip_install
   block:
     - name: Build
       make:
@@ -70,14 +70,18 @@
       make:
         chdir: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
         target: install
-      become: yes
+      become: true
   always:
     - name: Clean
       make:
         chdir: "{{ ansible_user_dir }}/code/github.com/neovim/neovim"
         target: clean
-      become: yes
-  when: not skip_install
+      become: true
+
+- name: Remove old config dir
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/nvim"
+    state: absent
 
 - name: Config folder
   ansible.builtin.file:
@@ -87,20 +91,22 @@
 
 - name: Clone Astronvim
   ansible.builtin.git:
-    clone: yes
+    clone: true
     repo: https://github.com/AstroNvim/AstroNvim
-    version: v2.11.8
+    version: main
     dest: "{{ ansible_user_dir }}/.config/nvim"
     depth: 1
-    force: yes
-    single_branch: yes
-    update: yes
+    force: true
+    single_branch: true
+    update: true
 
-- name: Copy user init.lua
-  ansible.builtin.copy:
-    src: "{{config_dir}}/nvim/lua/user"
-    dest: "{{ ansible_user_dir }}/.config/nvim/lua"
-
-- name: Update Packer
-  ansible.builtin.shell:
-    cmd: "nvim  --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'"
+- name: Clone Astronvim User
+  ansible.builtin.git:
+    clone: true
+    repo: https://github.com/AstroNvim/user_example
+    version: main
+    dest: "{{ ansible_user_dir }}/.config/nvim/lua/user"
+    depth: 1
+    force: true
+    single_branch: true
+    update: true
