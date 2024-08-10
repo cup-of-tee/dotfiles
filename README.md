@@ -13,6 +13,25 @@ Inspired by https://github.com/ALT-F4-LLC/dotfiles
 
 # Prerequisites
 
-- - openssh
-- - gh
-    `gh completion -s bash > ${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions/gh`
+- openssh
+- `mkdir -p ~/code/github/rolling-falling`
+- gh
+    ```
+    apt install gh
+    gh auth
+    gh repo ls
+    gh repo clone rolling-falling/dotfiles
+    gh completion -s bash > ${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions/gh
+    gh completion -s zsh > /usr/local/share/zsh/site-functions/_gh
+    ```
+- pipx
+    ```
+    sudo apt install pipx
+    pipx ensurepath
+    sudo pipx ensurepath --global
+    ```
+- ansible
+    ```
+    pipx install ansible --include-deps
+    ```
+- git config
